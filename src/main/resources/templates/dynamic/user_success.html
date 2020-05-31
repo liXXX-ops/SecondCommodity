@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+    layout:decorate="~{./layout/layout_users}"><!-- 轮播不显示 -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" http-equiv="X-UA-Compatible"  content="width=device-width,initial-scale=1.0">
+<title>Insert title here</title>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<link href="https://cdn.bootcss.com/iview/2.14.0/styles/iview.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" th:href="@{/css/usersuccess_css.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/iconfont/iconfont.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/iconfont/demo.css}"/>
+</head>
+<body>
+	<div layout:fragment="user_content">
+		<div class="top">
+			<div class="inner1">
+			 <img id="img" src="img/1.png">
+			</div>
+			 <div class="inner2">
+			<img id="img" src="img/2.png">
+			</div>
+			 <div class="inner3">
+			<img id="img" src="img/3.png">
+		     </div>
+			 <div class="inner4">
+			<img id="img" src="img/4.png">
+		 	</div>
+		</div>
+		<div class="ul">
+			<ul>
+			<li id="li" class="first one">1</li>
+			<li id="li" class="first two">2</li>
+			<li id="li" class="first three">3</li>
+			<li id="li" class="first four">4</li>
+			</ul>
+		</div>
+
+	</div>
+    
+</body>
+<script type="text/javascript">			
+	//获取img
+	//var img = document.querySelectorAll("img");//通过选择器，获取img
+	//var li = document.querySelectorAll("li");
+	//var div = document.querySelectorAll('.top div');
+	// console.log(img);
+	var img = document.getElementById("img");//通过选择器，获取img
+	var li = document.getElementById("li");
+	var div = document.getElementById('.top div');
+	var index = 0;//定义一个初始值为0的变量
+	function scrol() {
+
+ //使用display实现
+     	//隐藏
+     	for(var i=0;i<img.length;i++){
+     	//设置让三个隐藏，一个显示
+	     	img[i].style.display = "none";//把所有的img隐藏
+	     	li[i].style.backgroundColor =""; //分页颜色全都不显示
+     	}
+      	img[index].style.display = "block";//让一个显示
+     	li[index].style.backgroundColor = "red";//一个分页显示颜色
+      	index++;//自增
+      	if(index==div.length){
+	     	index=0;
+	 	}
+  	}
+    var timer = setInterval(scrol,500);//设置定时器
+    function mOver(index){//设置鼠标移动在分页上的函数
+        clearInterval(timer);//清除定时器
+      	for(var i=0;i<div.length;i++){//循环实现分页颜色的变化
+	        div[i].style.zIndex ="1";//让所有图片隐藏
+	        li[i].style.backgroundColor =""; //分页颜色失效
+        }
+    	div[index].style.zIndex = "9";//当前选中分页显示
+     }
+     function mOut(){//鼠标移出让它继续轮播
+        timer = setInterval(scrol,500);
+     }
+     for(var i =0;i<div.length;i++){
+         li[i].onmouseover = function(){
+         	mOver(i);
+         }
+         li[i].onmouseout = function(){
+           mOut(i);
+         }
+     }
+</script>
+
+</html>

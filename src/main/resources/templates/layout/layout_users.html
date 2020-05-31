@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" http-equiv="X-UA-Compatible"  content="width=device-width,initial-scale=1.0">
+<title>Insert title here</title>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<link href="https://cdn.bootcss.com/iview/2.14.0/styles/iview.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" th:href="@{/css/users_css.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/iconfont/iconfont.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/iconfont/demo.css}"/>
+</head>
+<body>
+	<div id="app">
+	<span class="icon-search"></span>
+		<i class="icon-icon-search"></i>
+		<!--{{ message}}    @click="open()"-->
+	</div>
+	<div class="header">
+		<h1>欢迎使用校园二手交易系统</h1>
+	</div>
+	<div class="header_my">
+		<ul>
+			<li>
+				<form action="/users/userSearch" method="post">
+					<i class="icon iconfont icon-icon-test1"></i>
+					<input type="text" name="namevvvv" v-model="searchThings" placeholder="商品名称"/>	
+					<input type="submit" value="搜索"/>	
+				</form>
+			</li>
+			<li style="width: 100px;margin:right">
+				<a href="#">
+					<i class="icon iconfont icon-icon_signal"></i>
+				</a>
+				<ul>
+					<li><a href="/users/info">个人信息</a></li>
+					<li><a href="/users/editInfo">设置信息</a></li>
+					<li><a href="/login">注销登录</a></li>
+				</ul>
+			</li>
+			<li style="width: 100px">
+				<a href="#">
+					<i class="icon iconfont icon-icon-test5"></i>
+				</a>
+				<ul>
+					<li><a href="/users/querymyrelease">我的发布</a></li>
+					<li><a href="/users/release">发布商品</a></li>
+					<li><a href="/users/goumai">我的购买</a></li>
+				</ul>
+			</li>
+			<li style="width: 100px">
+				<a href="#">
+					<i class="icon iconfont icon-icon_doc"></i>
+				</a>
+				<ul>
+					<li><a href="/users/mycomment">我的评论</a></li>
+					<li><a href="/users/comment">商品评论</a></li>
+				</ul>
+			</li>
+			<li style="width: 100px">
+				<a href="#">
+					<i class="icon iconfont icon-icon-test"></i>
+				</a>
+				<ul>
+					<!--li><button class="mybtn1" style="background-color:red;border:none;width:100px" onclick="mybtn()">我的积分</button></li> -->
+					<li><button style="background-color:red;border:none;width:100px" id="open_btn" class="btn">操作帮助</button></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<div class="topnav">
+		<a href="/users/shouye">首页</a>
+		<a href="/users/fuzhuang">服装</a>
+		<a href="/users/xiezi">鞋子</a>
+		
+		<a href="/users/xuexi">学习用品</a>
+		<a href="/users/shenghuo">生活用品</a>
+		<a href="/users/others">其他</a>
+	</div>
+	<div layout:fragment="user_content" style="margin: auto">
+		<ul>
+	        <!-- 寰幆杈撳嚭鏁版嵁 -->
+	        <li v-for="site in filteredSites">
+	            <a v-bind:href="site.url"><img v-bind:src="site.imageUrl" /></a>
+	            <p>{{site.name}}</p>
+	        </li>
+    	</ul>
+		
+	</div>
+	<div class="footer">
+		<p>Thanks</p>
+	</div>
+	
+	<div id="background" class="back">		
+	    	<div id="div1" class="content">			
+		    	<div id="close">				
+			    	<span id="close-button">×</span>				
+			    	<h2>此系统的操作详情</h2>			
+			    </div>			
+				<div id="div2">						
+				    	<p>
+					        1.可以在大类中查看您想购买的商品类型进行筛选；
+					    </p>
+					    <p>
+					        2.想要了解商品的详细内容，可以点击查看评论进行了解；
+					    </p>
+					    <p>
+					       	3.对于想要的商品了解详细信息后，进行线下交易。
+					    </p>
+					    <p>
+					    	<button id="open_btn1" class="btn1">关闭</button>
+					    </p>
+			   	</div>			
+		    	<h3 id="foot">Thanks</h3>		
+	    	</div>	
+    	</div>
+	
+<script type="text/javascript">
+/*弹窗的显示
+ * 
+ */
+
+var btn = document.getElementById('open_btn');
+var div = document.getElementById('background');
+var close = document.getElementById('close-button'); 
+var btn1 = document.getElementById('open_btn1');
+btn.onclick = function show() {
+	div.style.display = "block";
+} 
+close.onclick = function close() {	
+	div.style.display = "none";
+} 
+btn1.onclick = function close1(){
+	
+	div.style.display = "none";
+}
+
+window.onclick = function close(e) {
+	if (e.target == div) {		
+		div.style.display = "none";	
+	}
+}
+function mybtn(){
+	alert("积分为：");
+}
+
+/*没有作用的积分*/
+function mybtn(){
+$('document').ready(function(e) {
+		$('.mybtn1').on('click',$.ajax({
+			type: "POST",
+			url: "userIntegral",
+			dataType: "json",
+			error: function(t, i) {
+				alert('ajax 出错了');
+			},
+			data: {
+			t: t
+			},
+			success: function(t) {
+				if (t.code) {
+				alert(t.data)
+				} 
+				else {
+				alert('没有数据')
+				}
+			}
+			})
+		)
+	})
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>登录界面</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/login_css.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/iconfont/iconfont.css}"/>
+</head>
+<body>
+<form action="judge" method="post">
+
+         
+	<div id="login">
+		<h>账号登录</h><br>
+		<div class="input">
+		<i class="icon iconfont icon-icon_boss"></i><input type="text" name="user_id" v-model="login" placeholder="账号"></input><br>
+		<i class="icon iconfont icon-icon-test4"></i><input type="text" name="user_pwd" v-model="login" placeholder="密码"></input><br>
+		</div>
+		<div class="input1">
+			<input type="radio" name="role" value="1">普通用户</input>
+			<input type="radio" name="role" value="2">管理员</input><br>
+		</div>
+		
+		<button class="but" type="primary">确定</button>
+		<button class="but" type="primary">取消</button>
+		<button class="but" type="primary">
+			<a href="/registe">注册</a>
+		</button>
+	</div>
+</form>
+</body>
+</html>

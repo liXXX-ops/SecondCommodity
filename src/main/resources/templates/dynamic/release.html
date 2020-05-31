@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+<script th:src="@{/js/vue/2.6.11/vue.js}"></script>
+<script th:src="@{/js/axios/0.19.2/axios.min.js}"></script>
+<script src="//cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<link href="https://cdn.bootcss.com/iview/2.14.0/styles/iview.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" th:href="@{/css/release_css.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/iconfont/iconfont.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/iconfont/demo.css}"/>
+</head>
+<body>
+<div id="release">
+	<h>发布商品</h>
+    <div>
+        <label><span style="color: red">*</span>商品编号</label>
+        <input class="input" type="text" name="comm_number" id="comm_number" form="parent_form" lay-verify="required" autocomplete="off" placeholder="请输入商品编号">
+    </div>
+    <div>
+        <label><span style="color: red">*</span>商品名称</label>
+        <input type="text" name="comm_name" id="comm_name" form="parent_form" lay-verify="required" autocomplete="off" placeholder="请输入商品名称"
+                   class="layui-input">
+    </div>
+    <div>
+        <label><span style="color: red">*</span>商品类型</label>
+            <select name="comm_kind" id="comm_kind" form="parent_form" οnchange="setRuleContent();"> 
+	            <option value="1">请选择....</option>
+	            <option value="服装">服装</option>   <!--clothes shoes other_clothes learn_supply life_supply  -->
+	            <option value="鞋子">鞋子</option>
+	            
+	            <option value="学习用品">学习用品</option>
+	            <option value="生活用品">生活用品</option>
+	            <option value="其他">其他</option>
+            </select>     
+    </div>
+ 
+    <div>
+        <label><span style="color: red">*</span>商品描述</label>
+        <input type="text" name="comm_describe" id="comm_describe" form="parent_form" lay-verify="required" autocomplete="off" placeholder="请输入商品类型"
+                   class="layui-input">
+    </div>
+    
+    <div>
+        <label><span style="color: red">*</span>商品价格</label>
+            <input type="text" name="comm_price" id="comm_price" form="parent_form" autocomplete="off" placeholder="请输入商品价格"
+                   class="layui-input">
+    </div>
+	<form name="form" id="parent_form" action="releaseCommInfo" method="post" enctype="multipart/form-data">
+	    <input type="file" name="fileName" id="filename" accept="image/png, image/jpeg, image/jpg" multiple="multiple" onchange="checkImage(this)">
+	    <input type="button" id="submitBtn" onclick="checkSubmit()" value="上传"/>
+	</form>
+	<div id="onLoadImage">
+	
+	</div>
+	
+	<a href="/users/release"><button class="but" value="清除" >清除</button></a>
+	<a href="/judge"><button class="but" value="返回">返回</button></a>
+</div>
+</body>
+<script type="text/javascript">
+    var curFiles = [];//文件数组，用来保存上传的文件信息
+
+    //检查上传的图片
+    function checkImage(obj) {
+        var files = obj.files;
+        console.log(files.length);
+        if(files){
+
+            if(files.length <= 3) {//把一次上传图片数限制在3张
+                for (var i = 0; i < files.length; i++) {
+                    var item = files.item(i);
+                    var size = item.size;
+                    if (size / 1000 < 100) { //简易大小限制100K
+                        curFiles.push(item);
+                    }
+                    else {
+                        alert("第" + (i + 1) + "张图片过大");
+                    }
+                }
+            }
+            else{
+                $("#filename").val("");
+                alert("一次最多上传3张图片");
+            }
+        }
+        else {
+            $("#filename").val("");
+            alert("请选择上传文件");
+        }
+
+        //去除文件名相同的情况（上传列表中多次出现同一个文件）
+        for (var i = 0; i < curFiles.length - 1; i++) {
+            for (var j = 1; j < curFiles.length; j++) {
+                if (i != j) {
+                    if (curFiles[i].name == curFiles[j].name) {
+                        curFiles.splice(j, 1)
+                    }
+                }
+            }
+        }
+
+        //判断上传图片大小(100KB)
+        for(var i = 0; i < curFiles.length; i++){
+            var size = curFiles[i].size;
+            if(size/1000>100){
+                curFiles.splice(i, 1);
+            }
+
+        }
+
+        console.log(curFiles);
+
+        onLoadImage();
+    }
+
+    //预览图片
+    function onLoadImage() {
+        $("#onLoadImage").html("");
+   
+        for(var i = 0; i < curFiles.length; i++){
+            (function(i){
+                var file = curFiles[i];
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(){
+                    $('#onLoadImage').append("<img src='"+reader.result+"'/><span><span>"+file.name+"</span><button id='"+i+"' onclick='del(this.id)'>删除</button></span><br>");
+                }
+            })(i)
+        }
+    }
+
+    //删除功能
+    function del(id) {
+        var name = $("#"+id).prev().text();
+        console.log(name);
+        curFiles = curFiles.filter(function(file) {
+            return file.name !== name;
+        });
+        console.log(curFiles);
+        onLoadImage();
+    }
+
+    //上传功能的实现
+    function checkSubmit() {
+    	//document.getElementById("parent_form").submit();
+    	//var form=new FormData(document.getElementById("parent_form"))
+    	var comm_number = document.getElementById("comm_number").value
+    	var comm_name = document.getElementById("comm_name").value
+    	var comm_kind = document.getElementById("comm_kind").value
+    	var comm_describe = document.getElementById("comm_describe").value
+    	var comm_price = document.getElementById("comm_price").value
+    	
+    	alert(comm_price);
+        if(curFiles.length>0){
+            var formdata =  new FormData($('#form')[0]);
+            for (var i = 0; i<curFiles.length; i++) {
+                formdata.append('uploadFiles', curFiles[i]);
+            }
+            alert("files.length0000000"+curFiles.length);
+            console.log(formdata);
+            formdata.append('comm_number',comm_number);
+            formdata.append('comm_name',comm_name);
+            formdata.append('comm_kind',comm_kind);
+            formdata.append('comm_describe',comm_describe);
+            formdata.append('comm_price',comm_price);
+            
+            $.ajax({
+                url: 'releaseCommInfo',
+                type: 'post',
+                data: formdata,
+                cache: false,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(data) {
+                    alert(curFiles.length+"个上传结果");
+                    for(var k in curFiles.length){
+                        var num=Number(k)+1;
+                        alert("第"+num+"张上传结果："+data[k].result_msg);
+                        if(data[k].hasOwnProperty("absolutePath"))
+                            alert("第"+num+"张相对路径："+data[k].absolutePath);
+                    }
+                },
+                error: function(err) {
+                    alert("上传成功");
+                }
+            });
+        }
+        else{
+            alert("请选择文件后上传");
+        }
+    }
+
+</script>
+
+<!-- form action="users/save_release_comm" method="post" enctype="multipart/form-data">
+    <div>
+        <label><span style="color: red">*</span>商品名称</label>
+        <input type="text" name="comm_name" lay-verify="required" autocomplete="off" placeholder="请输入商品名称"
+                   class="layui-input">
+    </div>
+    <div>
+        <label><span style="color: red">*</span>商品类型</label>
+        <input type="text" name="comm_kind" lay-verify="required" autocomplete="off" placeholder="请输入商品类型"
+                   class="layui-input">
+    </div>
+    <div>
+        <label><span style="color: red">*</span>商品描述</label>
+            <select id="_select" name="comm_describe" οnchange="setRuleContent();"> 
+	            <option value="1">请选择....</option>
+	            <option value="clothes">服装</option>
+	            <option value="shoes">鞋子</option>
+	            <option value="other_clothes">其他衣物</option>
+	            <option value="learn_supply">学习用品</option>
+	            <option value="life_supply">生活用品</option>
+            </select>     
+    </div>
+    <div class="img-file" v-if='imgsback.length < sizeback'>
+        <label><span style="color: red">*</span>商品照片</label>   
+        <input type="file" name="comm_picture" id="filename" accept="image/png, image/jpeg, image/jpg" multiple="multiple" onchange="checkImage(this)">
+    	<input type="button" id="submitBtn" onclick="checkSubmit()" value="上传"/>
+        
+    </div>
+    <div id="onLoadImage">
+    
+    </div>
+    <div>
+        <label><span style="color: red">*</span>商品价格</label>
+            <input type="text" name="comm_price" lay-verify="required" autocomplete="off" placeholder="请输入商品价格"
+                   class="layui-input">
+    </div>
+</form>
+<script type="text/javascript"> 
+
+
+/*
+var curFiles = [];//文件数组，用来保存上传的文件信息
+
+//检查上传的图片
+function checkImage(obj) {
+    var files = obj.files;
+    console.log(files.length);
+    if(files){
+
+        if(files.length <= 3) {//把一次上传图片数限制在3张
+            for (var i = 0; i < files.length; i++) {
+                var item = files.item(i);
+                var size = item.size;
+                if (size / 1000 < 100) { //简易大小限制100K
+                    curFiles.push(item);
+                }
+                else {
+                    alert("第" + (i + 1) + "张图片过大");
+                }
+            }
+        }
+        else{
+            $("#filename").val("");
+            alert("一次最多上传3张图片");
+        }
+    }
+    else {
+        $("#filename").val("");
+        alert("请选择上传文件");
+    }
+
+    //去除文件名相同的情况（上传列表中多次出现同一个文件）
+    for (var i = 0; i < curFiles.length - 1; i++) {
+        for (var j = 1; j < curFiles.length; j++) {
+            if (i != j) {
+                if (curFiles[i].name == curFiles[j].name) {
+                    curFiles.splice(j, 1)
+                }
+            }
+        }
+    }
+
+    //判断上传图片大小(100KB)
+    for(var i = 0; i < curFiles.length; i++){
+        var size = curFiles[i].size;
+        if(size/1000>100){
+            curFiles.splice(i, 1);
+        }
+
+    }
+
+    console.log(curFiles);
+
+    onLoadImage();
+}
+
+//预览图片
+function onLoadImage() {
+    $("#onLoadImage").html("");
+    for(var i = 0; i < curFiles.length; i++){
+        (function(i){
+            var file = curFiles[i];
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(){
+                $('#onLoadImage').append("<img src='"+reader.result+"'/><span><span>"+file.name+"</span><button id='"+i+"' onclick='del(this.id)'>删除</button></span><br>");
+            }
+        })(i)
+    }
+}
+
+//删除功能
+function del(id) {
+    var name = $("#"+id).prev().text();
+    console.log(name);
+    curFiles = curFiles.filter(function(file) {
+        return file.name !== name;
+    });
+    console.log(curFiles);
+    onLoadImage();
+}
+
+//上传功能的实现
+function checkSubmit() {
+    if(curFiles.length>0){
+        var formdata =  new FormData($('#form')[0]);
+        for (var i = 0; i<curFiles.length; i++) {
+            formdata.append('uploadFiles', curFiles[i]);
+        }
+        console.log(formdata);
+        $.ajax({
+            url: 'users/save_release_comm',
+            type: 'post',
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                alert(data.length+"个上传结果");
+                for(var k in data){
+                    var num=Number(k)+1;
+                    alert("第"+num+"张上传结果："+data[k].result_msg);
+                    if(data[k].hasOwnProperty("absolutePath"))
+                        alert("第"+num+"张绝对路径："+data[k].absolutePath);
+                }
+            },
+            error: function(err) {
+                alert("上传失败");
+            }
+        });
+    }
+    else{
+        alert("请选择文件后上传");
+    }
+}*/
+</script>-->
+</body>
+</html>
+

@@ -1,0 +1,68 @@
+@charset "UTF-8";
+html{   
+        width: 100%;   
+        height: 100%;   
+        overflow: hidden;   
+        font-style: sans-serif;   
+    }   
+    body{   
+        width: 100%;   
+        height: 100%;   
+        font-family: 'Open Sans',sans-serif;   
+        margin: 0;   
+        background:url(../img/11.png);   
+        background-size: 100% 100%;
+    }   
+    #registe{   
+        position: absolute;   
+        top: 50%;   
+        left:50%;   
+        margin: -150px 0 0 -150px;   
+        width: 400px;   
+        height: 400px;   
+        font-size: 25px;
+    }   
+    #registe h{   
+       /* color: #fff;   
+        text-shadow:0 0 10px;   
+        letter-spacing: 1px;   
+        text-align: center;   */
+        font-family: "微软雅黑";
+        font-size: 30px;
+        color:black;
+    }   
+    h1{   
+        font-size: 2em;   
+        margin: 0.67em 0;   
+        text-align: center;
+    }   
+    .input i{
+		
+	}
+	.input {
+		width: 100%;
+		height: 42px;
+		text-indent: 0.5rem;
+	}
+	.input1{
+		width: 278px;   
+        height: 18px;   
+        margin-bottom: 10px;   
+        outline: none;   
+	
+	}
+    
+    .but{ 
+        width: 90px;  
+        /*min-height: 20px;   
+        display: block;   */
+        background-color: #4a77d4;   
+        border: 1px solid #3762bc;   
+        color: #fff;   
+        padding: 9px 14px;   
+        font-size: 15px;   
+        line-height: normal;   
+        border-radius: 5px;   
+        margin: 0; 
+        /*padding-right: 50px;  */
+    }  

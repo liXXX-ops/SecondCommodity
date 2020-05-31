@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<link href="https://cdn.bootcss.com/iview/2.14.0/styles/iview.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" th:href="@{/css/user_xiezi.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/iconfont/iconfont.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/iconfont/demo.css}"/>
+</head>
+<body>
+	<tr th:each="item,eee: ${discuss}">
+			
+			<td th:text="${item.discuss_user/1000+'***：'}"></td>
+			<td th:text="${item.discuss_content}"></td>
+			<td th:text="${'('+item.discuss_date+')'}"></td><br>
+			
+	</tr>
+	<a href="/users/xiezi"><button>返回</button></a>
+</body>
+</html>

@@ -1,0 +1,121 @@
+@charset "UTF-8";
+
+.login-title{
+font-size: 30px;
+color: red;
+}
+.header{
+	background-color: #f1f1f1;
+	padding: 15px;
+	text-align: center;
+	line-height: 30px;
+	font-size: 30px;
+}
+.header_my {/*置父容器高度，宽度，背景颜色，容器水平居中*/
+	background-color: #8080c0;
+	/*padding: 10px;*/
+	font-size: 20px;
+	height: 50px;
+   	margin: 0 auto;
+}
+
+.header_my ul{/*去掉点点*/
+     list-style: none;
+}
+.header_my ul li{/*每一个li左浮动形成横排，高度占满父容器形成文字垂直居中，文字水平居中*/
+             float: left;
+            line-height: 40px;
+            text-align: center; 
+            position: relative;/*给子ul定位用的*/
+}
+.header_my ul li a{/*去下下划线,变成块状继承父容器高度，左右撑开*/
+            text-decoration: none;
+            color:#000;
+            padding:0 10px;
+            display: block;
+}
+.header_my ul li a:hover{
+            color: #fff;
+            background-color: #666;
+}
+.header_my  ul li ul {
+            position: absolute;/*相对于父li的位置进行定位*/
+            left: 0;
+            top:40px;
+            display: none;/*隐藏下拉菜单*/
+}
+.header_my  ul li ul li{
+            float: none;
+            background-color:red;
+}
+.header_my  ul li:hover ul{
+            display: block;
+}
+.topnav{
+	overflow: left;
+	background-color: #333;
+	padding: 10px;
+	line-height: 30px;
+	font-size: 20px;
+}
+.column{
+	float: left;
+	padding: 10px;
+}
+.column.side{
+	width: 25%;
+}
+.column.middle{
+	width: 50%;
+}
+.column.middle{
+	width:25%;
+}
+.footer{
+	background-color: #f1f1f1;
+	padding: 10px;
+	text-align: center;
+	font-size: 20px;
+}
+
+
+
+
+
+
+
+#open_btn {	
+	} 
+#background {	
+	display: none;	
+	position: fixed;	
+	left: 0;	
+	top: 0;	width: 100%;	
+	height: 100%;	
+	background-color: rgba(0,0,0,0.5);} 
+#div1 {	
+	background:#eeeeee;	
+	width: 70%;	z-index: 1;	margin: 12% auto;	overflow: auto;} 
+span {	
+	color: white;	
+	padding-top: 12px;	
+	cursor: pointer;	
+	padding-right: 15px;} 
+#div2 {	
+	background:#FCFCFC;	
+	margin: auto;	
+	height: 300px;	
+	padding: 0 20px;} 
+#close {	
+	padding: 5px;	
+	background: #ADADAD;} 
+#close-button {	
+	float: right;	
+	font-size: 30px;} 
+#foot {	
+	padding: 5px 0;	
+	text-align: center;	
+	background: #ADADAD;	
+	color: white;} 
+	
+	
